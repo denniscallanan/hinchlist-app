@@ -14,6 +14,8 @@ Install all relevant dependencies
 
 ```
 npm install .
+cd ios
+pod install
 ```
 
 Ensure you have Xcode installed if you are testing dev for iOS, and ensure Android Studio is installed if you are testing dev for Android.

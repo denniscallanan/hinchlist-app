@@ -12,8 +12,6 @@ class SearchListsContainer extends Component {
   searchForLists = query => {
     this.setState({ query });
     this.props.search(query).then(filteredItems => {
-      console.log("Found filtered items");
-      console.log(filteredItems);
       this.setState({ filteredItems });
     });
   };

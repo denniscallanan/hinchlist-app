@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BottomNavigation } from 'react-native-paper';
-import { SearchListsContainer } from './src/components/SearchListsContainer'
+import SearchListsContainer from './src/components/SearchListsContainer'
 
 
 const mockLists = [
