@@ -9,6 +9,9 @@ import {
   GraphRequest,
   GraphRequestManager
 } from "react-native-fbsdk";
+import { setUser } from './src/redux/actions/users'
+import {connect} from 'react-redux';
+import PropTypes from "prop-types";
 
 
 const Drawer = createDrawerNavigator();
@@ -24,11 +27,7 @@ class App extends Component {
     this.checkAccess()
   }
 
-  updateUser = (currentUser) => {
-    this.setState({currentUser})
-  }
-
-  checkAccess = () => {
+  setUserFromAccessToken = () => {
     AccessToken.getCurrentAccessToken().then(data => {
       console.log(data.accessToken.toString());
       const infoRequest = new GraphRequest(
@@ -39,27 +38,43 @@ class App extends Component {
       // Start the graph request.
       new GraphRequestManager().addRequest(infoRequest).start();
     });
-  };
+  }
+
+  setMockUser = () => {
+    this._responseInfoCallback(null, {
+      id: "1234567",
+      name: "Dennis Callanan"
+    })
+  }
+
+  checkAccess = () => {
+    this.setMockUser()
+    // this.setUserFromAccessToken()
+  }
   
   _responseInfoCallback = (error, result) => {
     if (error) {
       console.log("Error fetching data: ");
       console.log(error);
-      this.updateUser({})
+      this.props.setUser({})
     } else {
-      this.updateUser(result)
+      this.props.setUser(result)
     }
   };
 
-  mainTabScreen = ({ navigation }) => <MainTabScreen 
+  mainTabScreen = ({ navigation }) => {
+    console.log("NAVIGATIONS")
+    console.log(navigation)
+    return (
+      <MainTabScreen 
         openDrawer={navigation.openDrawer}
-        currentUser={this.state.currentUser} 
-    />
+      />
+    )
+  } 
 
   accountScreen = ({ navigation }) => <AccountScreen 
       openDrawer={navigation.openDrawer} 
       checkAccess={this.checkAccess} 
-      updateUser={this.updateUser}
     />
 
   render() {
@@ -67,11 +82,27 @@ class App extends Component {
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={this.mainTabScreen} />
-            <Drawer.Screen name="Account" component={this.accountScreen} />
+            <Drawer.Screen name={"Account (" + this.props.currentUser.name.split(" ")[0] + ")"} component={this.accountScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     );
   }
 }
 
-export default App
+App.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  currentUser: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  currentUser: state.users.currentUser
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  setUser: (currentUser) => dispatch(setUser(currentUser))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App)

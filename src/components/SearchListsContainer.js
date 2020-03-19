@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Searchbar, List } from "react-native-paper";
 import { View } from "react-native";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class SearchListsContainer extends Component {
   state = {
@@ -18,9 +19,7 @@ class SearchListsContainer extends Component {
 
   styles = {
     searchBar: {
-      marginTop: 40,
-      marginLeft: 20,
-      marginRight: 20
+      margin: 20
     }
   };
 
@@ -61,7 +60,19 @@ class SearchListsContainer extends Component {
 
 SearchListsContainer.propTypes = {
   title: PropTypes.string.isRequired,
-  search: PropTypes.func.isRequired
+  search: PropTypes.func.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
-export default SearchListsContainer;
+const mapStateToProps = state => {
+  return {
+    currentUser: state.users.currentUser
+  };
+};
+
+const mapDispatchToProps = () => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SearchListsContainer);

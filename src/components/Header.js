@@ -11,7 +11,7 @@ class Header extends Component {
           uri: "https://cdn.hipwallpaper.com/i/78/42/ENmtT2.jpg"
         }}
         style={{
-          height: 80,
+          height: 85,
           position: "relative" // because it's parent
         }}
       >

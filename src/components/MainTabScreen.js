@@ -5,6 +5,7 @@ import { Text } from "react-native";
 import Header from "./Header";
 import _ from "lodash";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 const mockLists = [
   {
@@ -98,4 +99,12 @@ MainTabScreen.propTypes = {
   currentUser: PropTypes.object.isRequired
 };
 
-export default MainTabScreen;
+const mapStateToProps = state => {
+  return {
+    currentUser: state.users.currentUser
+  };
+};
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainTabScreen);

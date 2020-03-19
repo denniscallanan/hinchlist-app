@@ -3,6 +3,8 @@ import { LoginButton } from "react-native-fbsdk";
 import { View } from "react-native";
 import Header from "./Header";
 import PropTypes from "prop-types";
+import { setUser } from "../redux/actions/users";
+import { connect } from "react-redux";
 
 class AccountScreen extends Component {
   render() {
@@ -25,7 +27,7 @@ class AccountScreen extends Component {
               }
             }}
             onLogoutFinished={() => {
-              this.props.updateUser({});
+              this.props.setUser({});
             }}
           />
         </View>
@@ -37,7 +39,16 @@ class AccountScreen extends Component {
 AccountScreen.propTypes = {
   openDrawer: PropTypes.func.isRequired,
   checkAccess: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired
+  setUser: PropTypes.func.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
-export default AccountScreen;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  setUser: currentUser => dispatch(setUser(currentUser))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);
