@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import SearchListsContainer from "./SearchListsContainer";
-import { mockLists } from "../../src/constants";
+import PropTypes from "prop-types";
+import { searchLists } from "../redux/actions/searchedLists";
 
 class AllLists extends Component {
   render() {
     return (
       <SearchListsContainer
-        apiRequest={() => Promise.resolve({})}
+        apiRequest={query => this.props.searchLists(query)}
         title="All Lists"
-        items={mockLists}
+        items={this.props.searchedLists}
+        searchOnMount={false}
       />
     );
   }
@@ -17,8 +19,17 @@ class AllLists extends Component {
 
 AllLists.propTypes = {};
 
-const mapStateToProps = () => ({});
+AllLists.propTypes = {
+  searchedLists: PropTypes.array.isRequired,
+  searchLists: PropTypes.func.isRequired
+};
 
-const mapDispatchToProps = () => ({});
+const mapStateToProps = state => ({
+  searchedLists: state.searchedLists.items
+});
+
+const mapDispatchToProps = dispatch => ({
+  searchLists: query => dispatch(searchLists(query))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllLists);

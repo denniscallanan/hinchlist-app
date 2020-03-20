@@ -11,9 +11,12 @@ class SearchListsContainer extends Component {
   };
 
   componentDidMount = () => {
-    this.props.apiRequest().then(() => {
-      this.searchForLists("");
-    });
+    if (this.props.searchOnMount) {
+      this.props.apiRequest().then(() => {
+        console.log(this.props.items);
+        this.dynamicSearchForLists("");
+      });
+    }
   };
 
   filter = (query, unfilteredList) =>
@@ -21,11 +24,19 @@ class SearchListsContainer extends Component {
       item.title.toLowerCase().includes(query.toLowerCase())
     );
 
-  searchForLists = query => {
+  dynamicSearchForLists = query => {
     this.setState({
       query,
       filteredItems: this.filter(query, this.props.items)
     });
+  };
+
+  clickedSearchForLists = () => {
+    if (!this.props.searchOnMount) {
+      this.props.apiRequest(this.state.query).then(() => {
+        this.dynamicSearchForLists("");
+      });
+    }
   };
 
   styles = {
@@ -53,7 +64,14 @@ class SearchListsContainer extends Component {
         <Searchbar
           style={this.styles.searchBar}
           placeholder={"Search " + this.props.title}
-          onChangeText={this.searchForLists}
+          onChangeText={query => {
+            if (this.props.searchOnMount) {
+              this.dynamicSearchForLists(query);
+            } else {
+              this.setState({ query });
+            }
+          }}
+          onIconPress={this.clickedSearchForLists}
           value={query}
         />
         <List.Section>
@@ -69,7 +87,8 @@ SearchListsContainer.propTypes = {
   title: PropTypes.string.isRequired,
   apiRequest: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired,
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  searchOnMount: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {
