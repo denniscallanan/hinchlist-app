@@ -6,6 +6,7 @@ import Header from "./Header";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { getFavouriteLists } from "../redux/actions/favouriteLists";
 
 const mockLists = [
   {
@@ -28,32 +29,6 @@ const mockLists = [
   }
 ];
 
-const filter = (query, unfilteredList) =>
-  unfilteredList.filter(item =>
-    item.title.toLowerCase().includes(query.toLowerCase())
-  );
-
-const myLists = () => (
-  <SearchListsContainer
-    search={query => Promise.resolve(filter(query, mockLists.slice(1, 3)))}
-    title="My Lists"
-  />
-);
-
-const myFavLists = () => (
-  <SearchListsContainer
-    search={query => Promise.resolve(filter(query, mockLists.slice(0, 1)))}
-    title="My Favourite Lists"
-  />
-);
-
-const allLists = () => (
-  <SearchListsContainer
-    search={query => Promise.resolve(filter(query, mockLists))}
-    title="All Lists"
-  />
-);
-
 class MainTabScreen extends Component {
   state = {
     index: 0,
@@ -66,10 +41,34 @@ class MainTabScreen extends Component {
 
   _handleIndexChange = index => this.setState({ index });
 
+  myLists = () => (
+    <SearchListsContainer
+      apiRequest={() => Promise.resolve({})}
+      title="My Lists"
+      items={mockLists}
+    />
+  );
+
+  myFavLists = () => (
+    <SearchListsContainer
+      apiRequest={() => this.props.getFavouriteLists(this.props.currentUser.id)}
+      title="My Favourite Lists"
+      items={this.props.favouriteLists}
+    />
+  );
+
+  allLists = () => (
+    <SearchListsContainer
+      apiRequest={() => Promise.resolve({})}
+      title="All Lists"
+      items={mockLists}
+    />
+  );
+
   _renderScene = BottomNavigation.SceneMap({
-    mylists: myLists,
-    favourite: myFavLists,
-    all: allLists
+    mylists: this.myLists,
+    favourite: this.myFavLists,
+    all: this.allLists
   });
 
   render() {
@@ -96,15 +95,20 @@ class MainTabScreen extends Component {
 
 MainTabScreen.propTypes = {
   openDrawer: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
+  getFavouriteLists: PropTypes.func.isRequired,
+  favouriteLists: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.users.currentUser
+    currentUser: state.users.currentUser,
+    favouriteLists: state.favouriteLists.items
   };
 };
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  getFavouriteLists: userID => dispatch(getFavouriteLists(userID))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainTabScreen);

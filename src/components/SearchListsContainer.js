@@ -10,10 +10,21 @@ class SearchListsContainer extends Component {
     filteredItems: []
   };
 
+  componentDidMount = () => {
+    this.props.apiRequest().then(() => {
+      this.searchForLists("");
+    });
+  };
+
+  filter = (query, unfilteredList) =>
+    unfilteredList.filter(item =>
+      item.title.toLowerCase().includes(query.toLowerCase())
+    );
+
   searchForLists = query => {
-    this.setState({ query });
-    this.props.search(query).then(filteredItems => {
-      this.setState({ filteredItems });
+    this.setState({
+      query,
+      filteredItems: this.filter(query, this.props.items)
     });
   };
 
@@ -33,10 +44,6 @@ class SearchListsContainer extends Component {
         />
       );
     });
-  };
-
-  componentDidMount = () => {
-    this.searchForLists("");
   };
 
   render() {
@@ -60,8 +67,9 @@ class SearchListsContainer extends Component {
 
 SearchListsContainer.propTypes = {
   title: PropTypes.string.isRequired,
-  search: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired
+  apiRequest: PropTypes.func.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  items: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {

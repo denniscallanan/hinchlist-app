@@ -1,8 +1,10 @@
 import * as Redux from "redux";
 import userReducer from "./users";
+import favouriteListsReducer from "./favouriteLists";
 
 const reducer = Redux.combineReducers({
-  users: userReducer
+  users: userReducer,
+  favouriteLists: favouriteListsReducer
 });
 
 export default reducer;
