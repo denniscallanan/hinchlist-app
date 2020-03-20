@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import AccountScreen from './src/components/AccountScreen'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import MainTabScreen from './src/components/MainTabScreen';
 import {
   AccessToken,
@@ -12,8 +13,11 @@ import {
 import { setUser } from './src/redux/actions/users'
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
+import TaskScreen from './src/components/TaskScreen'
+import PostScreen from './src/components/PostScreen'
 
 
+const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 class App extends Component {
@@ -62,22 +66,47 @@ class App extends Component {
     }
   };
 
-  mainTabScreen = ({ navigation }) => <MainTabScreen 
-      openDrawer={navigation.openDrawer}
+  mainTabScreen = ({ navigation }) => <MainTabScreen
+      navigation={navigation}
     />
 
   accountScreen = ({ navigation }) => <AccountScreen 
-      openDrawer={navigation.openDrawer} 
+      navigation={navigation} 
       checkAccess={this.checkAccess} 
     />
+
+    taskScreen = ({ route, navigation }) => <TaskScreen 
+      route={route}
+      navigation={navigation}
+    />
+
+    postScreen = ({ route, navigation }) => <PostScreen 
+      route={route}
+      navigation={navigation}
+    />
+
+    mainDrawerNavigator = () => (
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={this.mainTabScreen} />
+        <Drawer.Screen name={"Account (" + this.getUserFirstName() + ")"} component={this.accountScreen} />
+      </Drawer.Navigator>
+    )
 
   render() {
     return (
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={this.mainTabScreen} />
-            <Drawer.Screen name={"Account (" + this.getUserFirstName() + ")"} component={this.accountScreen} />
-        </Drawer.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <Stack.Screen
+            name="Main"
+            component={this.mainDrawerNavigator}
+          />
+          <Stack.Screen name="Task" component={this.taskScreen} />
+          <Stack.Screen name="Post" component={this.postScreen} />
+        </Stack.Navigator> 
       </NavigationContainer>
     );
   }

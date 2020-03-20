@@ -12,6 +12,7 @@ class MyLists extends Component {
         title="My Lists"
         items={this.props.myLists}
         searchOnMount={true}
+        navigation={this.props.navigation}
       />
     );
   }
@@ -19,7 +20,8 @@ class MyLists extends Component {
 
 MyLists.propTypes = {
   myLists: PropTypes.array.isRequired,
-  getMyLists: PropTypes.func.isRequired
+  getMyLists: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

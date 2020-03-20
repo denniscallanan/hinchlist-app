@@ -52,6 +52,7 @@ class SearchListsContainer extends Component {
           title={listItem.title}
           key={listItem.list_id}
           left={() => <List.Icon icon="check-box-multiple-outline" />}
+          onPress={() => this.props.navigation.navigate("Task", { listItem })}
         />
       );
     });
@@ -88,14 +89,13 @@ SearchListsContainer.propTypes = {
   apiRequest: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired,
   items: PropTypes.array.isRequired,
-  searchOnMount: PropTypes.bool.isRequired
+  searchOnMount: PropTypes.bool.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => {
-  return {
-    currentUser: state.users.currentUser
-  };
-};
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser
+});
 
 const mapDispatchToProps = () => ({});
 

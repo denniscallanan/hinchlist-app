@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import MyLists from "./MyLists";
 import AllLists from "./AllLists";
 import FavouriteLists from "./FavouriteLists";
+import { FAB } from "react-native-paper";
 
 class MainTabScreen extends Component {
   state = {
@@ -22,9 +23,9 @@ class MainTabScreen extends Component {
   _handleIndexChange = index => this.setState({ index });
 
   _renderScene = BottomNavigation.SceneMap({
-    mylists: () => <MyLists />,
-    favourite: () => <FavouriteLists />,
-    all: () => <AllLists />
+    mylists: () => <MyLists navigation={this.props.navigation} />,
+    favourite: () => <FavouriteLists navigation={this.props.navigation} />,
+    all: () => <AllLists navigation={this.props.navigation} />
   });
 
   render() {
@@ -42,15 +43,29 @@ class MainTabScreen extends Component {
 
     return (
       <>
-        <Header openDrawer={this.props.openDrawer} />
+        <Header onPress={this.props.navigation.openDrawer} />
         {navigation}
+        <FAB
+          style={{
+            position: "absolute",
+            marginRight: 36,
+            marginBottom: 120,
+            right: 0,
+            bottom: 0
+          }}
+          small
+          icon="plus"
+          onPress={() =>
+            this.props.navigation.navigate("Post", { name: "Jane" })
+          }
+        />
       </>
     );
   }
 }
 
 MainTabScreen.propTypes = {
-  openDrawer: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired
 };
 

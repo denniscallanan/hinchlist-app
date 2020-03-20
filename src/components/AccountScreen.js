@@ -10,7 +10,7 @@ class AccountScreen extends Component {
   render() {
     return (
       <>
-        <Header openDrawer={this.props.openDrawer} />
+        <Header onPress={this.props.navigation.openDrawer} />
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
@@ -37,7 +37,7 @@ class AccountScreen extends Component {
 }
 
 AccountScreen.propTypes = {
-  openDrawer: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
   checkAccess: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired

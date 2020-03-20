@@ -16,10 +16,10 @@ class Header extends Component {
         }}
       >
         <IconButton
-          icon="menu"
+          icon={this.props.icon || "menu"}
           style={{ top: 40 }}
           size={24}
-          onPress={this.props.openDrawer}
+          onPress={this.props.onPress}
         />
       </ImageBackground>
     );
@@ -27,7 +27,8 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  openDrawer: PropTypes.func.isRequired
+  onPress: PropTypes.func.isRequired,
+  icon: PropTypes.string
 };
 
 export default Header;

@@ -12,6 +12,7 @@ class AllLists extends Component {
         title="All Lists"
         items={this.props.searchedLists}
         searchOnMount={false}
+        navigation={this.props.navigation}
       />
     );
   }
@@ -21,7 +22,8 @@ AllLists.propTypes = {};
 
 AllLists.propTypes = {
   searchedLists: PropTypes.array.isRequired,
-  searchLists: PropTypes.func.isRequired
+  searchLists: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -12,6 +12,7 @@ class FavouriteLists extends Component {
         title="Favourite Lists"
         items={this.props.favouriteLists}
         searchOnMount={true}
+        navigation={this.props.navigation}
       />
     );
   }
@@ -19,7 +20,8 @@ class FavouriteLists extends Component {
 
 FavouriteLists.propTypes = {
   favouriteLists: PropTypes.array.isRequired,
-  getFavouriteLists: PropTypes.func.isRequired
+  getFavouriteLists: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
