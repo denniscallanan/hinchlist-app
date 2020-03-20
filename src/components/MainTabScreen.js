@@ -1,33 +1,13 @@
 import React, { Component } from "react";
 import { BottomNavigation } from "react-native-paper";
-import SearchListsContainer from "./SearchListsContainer";
 import { Text } from "react-native";
 import Header from "./Header";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getFavouriteLists } from "../redux/actions/favouriteLists";
-
-const mockLists = [
-  {
-    title: "Corona Virus List",
-    desc: "List of things to do to prepare for the Corona Virus",
-    author: "Dennis Callanan",
-    id: 1
-  },
-  {
-    title: "Bathroom Cleaning List",
-    desc: "List of tasks for cleaning the bathroom",
-    author: "Emma Fenton",
-    id: 2
-  },
-  {
-    title: "Grocery Shopping List",
-    desc: "Weekly grocery shopping liast",
-    author: "Miss Consuela",
-    id: 3
-  }
-];
+import MyLists from "./MyLists";
+import AllLists from "./AllLists";
+import FavouriteLists from "./FavouriteLists";
 
 class MainTabScreen extends Component {
   state = {
@@ -41,34 +21,10 @@ class MainTabScreen extends Component {
 
   _handleIndexChange = index => this.setState({ index });
 
-  myLists = () => (
-    <SearchListsContainer
-      apiRequest={() => Promise.resolve({})}
-      title="My Lists"
-      items={mockLists}
-    />
-  );
-
-  myFavLists = () => (
-    <SearchListsContainer
-      apiRequest={() => this.props.getFavouriteLists(this.props.currentUser.id)}
-      title="My Favourite Lists"
-      items={this.props.favouriteLists}
-    />
-  );
-
-  allLists = () => (
-    <SearchListsContainer
-      apiRequest={() => Promise.resolve({})}
-      title="All Lists"
-      items={mockLists}
-    />
-  );
-
   _renderScene = BottomNavigation.SceneMap({
-    mylists: this.myLists,
-    favourite: this.myFavLists,
-    all: this.allLists
+    mylists: () => <MyLists />,
+    favourite: () => <FavouriteLists />,
+    all: () => <AllLists />
   });
 
   render() {
@@ -95,20 +51,15 @@ class MainTabScreen extends Component {
 
 MainTabScreen.propTypes = {
   openDrawer: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired,
-  getFavouriteLists: PropTypes.func.isRequired,
-  favouriteLists: PropTypes.array.isRequired
+  currentUser: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.users.currentUser,
-    favouriteLists: state.favouriteLists.items
+    currentUser: state.users.currentUser
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  getFavouriteLists: userID => dispatch(getFavouriteLists(userID))
-});
+const mapDispatchToProps = () => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainTabScreen);

@@ -23,14 +23,14 @@ export function getFavouriteLists(userID) {
     return {};
   }
   return dispatch => {
-    const url = "/lifelists/favourites/" + userID;
+    const url = "/lists/favourites/" + userID;
     dispatch(getFavouriteListsBegin());
 
     return apiRequest(url, {
       method: "GET"
     })
       .then(response => {
-        return dispatch(getFavouriteListsSuccess(response));
+        return dispatch(getFavouriteListsSuccess(response.result.items));
       })
       .catch(error => {
         return dispatch(getFavouriteListsFailure(error.message));

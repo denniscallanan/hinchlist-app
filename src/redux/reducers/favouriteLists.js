@@ -11,7 +11,6 @@ const initialState = {
 };
 
 function favouriteListsReducer(state = initialState, action) {
-  console.log(action);
   switch (action.type) {
     case GET_FAVOURITE_LISTS_SUCCESS:
       return {

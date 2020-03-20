@@ -39,7 +39,7 @@ class SearchListsContainer extends Component {
       return (
         <List.Item
           title={listItem.title}
-          key={listItem.id}
+          key={listItem.list_id}
           left={() => <List.Icon icon="check-box-multiple-outline" />}
         />
       );
