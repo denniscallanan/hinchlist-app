@@ -18,12 +18,9 @@ export const getFavouriteListsFailure = error => ({
   payload: error
 });
 
-export function getFavouriteLists(userID) {
-  if (!userID) {
-    return {};
-  }
+export function getFavouriteLists() {
   return dispatch => {
-    const url = "/lists/favourites/" + userID;
+    const url = "/api/lists/favourites";
     dispatch(getFavouriteListsBegin());
 
     return apiRequest(url, {
