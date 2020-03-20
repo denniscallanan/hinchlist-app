@@ -18,17 +18,13 @@ const Drawer = createDrawerNavigator();
 
 class App extends Component {
 
-  state = {
-    currentUser: {}
-  }
-
   componentDidMount = () => {
     console.log("Main App mounted. Checking access")
     this.checkAccess()
   }
 
   getUserFirstName = () => {
-    return this.state.currentUser.name ? this.state.currentUser.name.split(" ")[0] : "Login"
+    return this.props.currentUser.name ? this.props.currentUser.name.split(" ")[0] : "Login"
   }
 
   setUserFromAccessToken = () => {
