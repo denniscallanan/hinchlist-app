@@ -27,6 +27,10 @@ class App extends Component {
     this.checkAccess()
   }
 
+  getUserFirstName = () => {
+    return this.state.currentUser.name ? this.state.currentUser.name.split(" ")[0] : "Login"
+  }
+
   setUserFromAccessToken = () => {
     AccessToken.getCurrentAccessToken().then(data => {
       console.log(data.accessToken.toString());
@@ -62,15 +66,9 @@ class App extends Component {
     }
   };
 
-  mainTabScreen = ({ navigation }) => {
-    console.log("NAVIGATIONS")
-    console.log(navigation)
-    return (
-      <MainTabScreen 
-        openDrawer={navigation.openDrawer}
-      />
-    )
-  } 
+  mainTabScreen = ({ navigation }) => <MainTabScreen 
+      openDrawer={navigation.openDrawer}
+    />
 
   accountScreen = ({ navigation }) => <AccountScreen 
       openDrawer={navigation.openDrawer} 
@@ -82,7 +80,7 @@ class App extends Component {
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={this.mainTabScreen} />
-            <Drawer.Screen name={"Account (" + this.props.currentUser.name.split(" ")[0] + ")"} component={this.accountScreen} />
+            <Drawer.Screen name={"Account (" + this.getUserFirstName() + ")"} component={this.accountScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     );
