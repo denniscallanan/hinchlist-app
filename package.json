@@ -9,6 +9,7 @@
     "lint-fix": "eslint src --ext .js,.jsx --fix"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.8.1",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/drawer": "^5.3.1",
     "@react-navigation/native": "^5.1.0",

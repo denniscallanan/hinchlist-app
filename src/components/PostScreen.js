@@ -14,9 +14,7 @@ class PostScreen extends Component {
       <>
         <Header
           icon="arrow-left"
-          onPress={() =>
-            this.props.navigation.navigate("Main", { name: "Jane" })
-          }
+          onPress={() => this.props.navigation.navigate("Main")}
         />
         <View>
           <Text>Post a new Life list here</Text>
