@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Header from "./Header";
 import { apiRequest } from "../api/client";
-import { List, Checkbox } from "react-native-paper";
+import { List, Checkbox, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
 
 class TaskScreen extends Component {
   state = {
-    tasks: []
+    tasks: [],
+    allChecked: false
   };
 
   componentDidMount = () => {
@@ -28,7 +29,10 @@ class TaskScreen extends Component {
           () => {
             this.loadCheckState().then(data => {
               if (data && data.tasks) {
-                this.setState({ tasks: data.tasks });
+                this.setState({
+                  tasks: data.tasks,
+                  allChecked: data.tasks.every(task => task.checked)
+                });
               }
             });
           }
@@ -60,11 +64,7 @@ class TaskScreen extends Component {
 
   toggleTaskCheck = idx => {
     const tasks = this.state.tasks;
-    tasks[idx] = {
-      title: tasks[idx].title,
-      checked: !tasks[idx].checked,
-      id: tasks[idx].id
-    };
+    tasks[idx] = { ...tasks[idx], checked: !tasks[idx].checked };
     this.setState({ tasks });
   };
 
@@ -88,6 +88,16 @@ class TaskScreen extends Component {
     });
   };
 
+  checkAll = () => {
+    this.setState({
+      tasks: this.state.tasks.map(taskItem => ({
+        ...taskItem,
+        checked: !this.state.allChecked
+      })),
+      allChecked: !this.state.allChecked
+    });
+  };
+
   render() {
     return (
       <>
@@ -105,6 +115,9 @@ class TaskScreen extends Component {
             </List.Subheader>
             {this.getTaskItems()}
           </List.Section>
+          <Button onPress={this.checkAll}>
+            {this.state.allChecked ? "Uncheck all" : "Check all"}
+          </Button>
         </View>
       </>
     );
