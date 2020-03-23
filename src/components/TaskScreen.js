@@ -10,10 +10,17 @@ import AsyncStorage from "@react-native-community/async-storage";
 class TaskScreen extends Component {
   state = {
     tasks: [],
-    allChecked: false
+    allChecked: false,
+    favourited: false,
+    liked: false
   };
 
   componentDidMount = () => {
+    this.getTaskData();
+    this.getFavouritesData();
+  };
+
+  getTaskData = () => {
     apiRequest("/api/tasks/lists/" + this.props.route.params.listItem.list_id, {
       method: "GET"
     })
@@ -21,8 +28,7 @@ class TaskScreen extends Component {
         this.setState(
           {
             tasks: response.result.items.map(item => ({
-              id: item.id,
-              title: item.title,
+              ...item,
               checked: false
             }))
           },
@@ -43,10 +49,24 @@ class TaskScreen extends Component {
       });
   };
 
+  getFavouritesData = () => {
+    apiRequest(
+      "/api/favourites/lists/" + this.props.route.params.listItem.list_id,
+      {
+        method: "GET"
+      }
+    ).then(response => {
+      this.setState({ favourited: response.result.favourited });
+    });
+  };
+
   storeCheckState = async () => {
     const storeKey = "lifelistitem_" + this.props.route.params.listItem.list_id;
     try {
-      await AsyncStorage.setItem(storeKey, JSON.stringify(this.state));
+      await AsyncStorage.setItem(
+        storeKey,
+        JSON.stringify({ tasks: this.state.tasks })
+      );
     } catch (error) {
       console.log("Error storing to check state: " + error);
     }
@@ -98,6 +118,10 @@ class TaskScreen extends Component {
     });
   };
 
+  likeButtonPressed = () => {};
+
+  starButtonPressed = () => {};
+
   render() {
     return (
       <>
@@ -107,6 +131,10 @@ class TaskScreen extends Component {
             this.storeCheckState();
             this.props.navigation.navigate("Main");
           }}
+          likeButtonPressed={this.likeButtonPressed}
+          starButtonPressed={this.starButtonPressed}
+          liked={this.state.liked}
+          starred={this.state.favourited}
         />
         <View>
           <List.Section>
