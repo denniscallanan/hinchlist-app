@@ -10,7 +10,7 @@ class MyLists extends Component {
       <SearchListsContainer
         apiRequest={() => this.props.getMyLists()}
         title="My Lists"
-        items={this.props.myLists}
+        itemStore={this.props.myLists}
         searchOnMount={true}
         navigation={this.props.navigation}
       />
@@ -19,13 +19,13 @@ class MyLists extends Component {
 }
 
 MyLists.propTypes = {
-  myLists: PropTypes.array.isRequired,
+  myLists: PropTypes.object.isRequired,
   getMyLists: PropTypes.func.isRequired,
   navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  myLists: state.myLists.items
+  myLists: state.myLists
 });
 
 const mapDispatchToProps = dispatch => ({

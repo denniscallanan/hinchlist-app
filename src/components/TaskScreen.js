@@ -225,7 +225,7 @@ class TaskScreen extends Component {
         <View>
           <List.Section>
             <List.Subheader>
-              {this.props.route.params.listItem.title}
+              {this.props.route.params.listItem.description}
             </List.Subheader>
             {this.getTaskItems()}
           </List.Section>

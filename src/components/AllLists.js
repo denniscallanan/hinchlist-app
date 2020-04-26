@@ -10,7 +10,7 @@ class AllLists extends Component {
       <SearchListsContainer
         apiRequest={query => this.props.searchLists(query)}
         title="All Lists"
-        items={this.props.searchedLists}
+        itemStore={this.props.searchedLists}
         searchOnMount={false}
         navigation={this.props.navigation}
       />
@@ -21,13 +21,13 @@ class AllLists extends Component {
 AllLists.propTypes = {};
 
 AllLists.propTypes = {
-  searchedLists: PropTypes.array.isRequired,
+  searchedLists: PropTypes.object.isRequired,
   searchLists: PropTypes.func.isRequired,
   navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  searchedLists: state.searchedLists.items
+  searchedLists: state.searchedLists
 });
 
 const mapDispatchToProps = dispatch => ({

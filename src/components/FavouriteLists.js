@@ -10,7 +10,7 @@ class FavouriteLists extends Component {
       <SearchListsContainer
         apiRequest={() => this.props.getFavouriteLists()}
         title="Favourite Lists"
-        items={this.props.favouriteLists}
+        itemStore={this.props.favouriteLists}
         searchOnMount={true}
         navigation={this.props.navigation}
       />
@@ -19,13 +19,13 @@ class FavouriteLists extends Component {
 }
 
 FavouriteLists.propTypes = {
-  favouriteLists: PropTypes.array.isRequired,
+  favouriteLists: PropTypes.object.isRequired,
   getFavouriteLists: PropTypes.func.isRequired,
   navigation: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  favouriteLists: state.favouriteLists.items
+  favouriteLists: state.favouriteLists
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Searchbar, List } from "react-native-paper";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,7 +22,7 @@ class SearchListsContainer extends Component {
   static getDerivedStateFromProps(props, state) {
     return {
       ...state,
-      filteredItems: props.items.filter(item =>
+      filteredItems: props.itemStore.items.filter(item =>
         item.title.toLowerCase().includes(state.query.toLowerCase())
       )
     };
@@ -36,7 +36,7 @@ class SearchListsContainer extends Component {
   dynamicSearchForLists = query => {
     this.setState({
       query,
-      filteredItems: this.filter(query, this.props.items)
+      filteredItems: this.filter(query, this.props.itemStore.items)
     });
   };
 
@@ -46,6 +46,10 @@ class SearchListsContainer extends Component {
         this.dynamicSearchForLists("");
       });
     }
+  };
+
+  isLoading = () => {
+    return this.props.itemStore.loading;
   };
 
   styles = {
@@ -68,6 +72,20 @@ class SearchListsContainer extends Component {
   };
 
   render() {
+    if (this.isLoading()) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            flexDirection: "row",
+            padding: 10
+          }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     const { query } = this.state;
     return (
       <View style={{ flex: 1 }}>
@@ -97,7 +115,7 @@ SearchListsContainer.propTypes = {
   title: PropTypes.string.isRequired,
   apiRequest: PropTypes.func.isRequired,
   currentUser: PropTypes.object.isRequired,
-  items: PropTypes.array.isRequired,
+  itemStore: PropTypes.object.isRequired,
   searchOnMount: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired
 };
