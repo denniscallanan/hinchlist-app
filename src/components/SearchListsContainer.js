@@ -3,6 +3,7 @@ import { Searchbar, List } from "react-native-paper";
 import { View } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { ScrollView } from "react-native-gesture-handler";
 
 class SearchListsContainer extends Component {
   state = {
@@ -69,7 +70,7 @@ class SearchListsContainer extends Component {
   render() {
     const { query } = this.state;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Searchbar
           style={this.styles.searchBar}
           placeholder={"Search " + this.props.title}
@@ -83,9 +84,9 @@ class SearchListsContainer extends Component {
           onIconPress={this.clickedSearchForLists}
           value={query}
         />
-        <List.Section>
+        <List.Section style={{ flex: 1 }}>
           <List.Subheader>{this.props.title}</List.Subheader>
-          {this.getListItems()}
+          <ScrollView>{this.getListItems()}</ScrollView>
         </List.Section>
       </View>
     );

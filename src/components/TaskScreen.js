@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Header from "./Header";
@@ -185,11 +185,20 @@ class TaskScreen extends Component {
   };
 
   deleteButtonPressed = () => {
-    this.props.deleteMyLists(this.props.route.params.listItem.list_id);
-    this.props.deleteFavouriteListsSuccess(
-      this.props.route.params.listItem.list_id
-    );
-    this.props.navigation.navigate("Main");
+    Alert.alert("Delete forever?", "", [
+      {
+        text: "Yep!",
+        onPress: () => {
+          this.props.deleteMyLists(this.props.route.params.listItem.list_id);
+          this.props.deleteFavouriteListsSuccess(
+            this.props.route.params.listItem.list_id
+          );
+          this.props.navigation.navigate("Main");
+        },
+        style: "cancel"
+      },
+      { text: "Cancel", style: "cancel" }
+    ]);
   };
 
   render() {

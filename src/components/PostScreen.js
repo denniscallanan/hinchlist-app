@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Card, FAB, TextInput, Surface } from "react-native-paper";
-import { ScrollView } from "react-native";
+import { ScrollView, Alert } from "react-native";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Header from "./Header";
@@ -34,6 +34,14 @@ class PostScreen extends Component {
       ...this.state,
       tasks: this.state.tasks.filter(task => task && task.length > 0)
     };
+    if (form.tasks.length < 3) {
+      Alert.alert("List must contain at least 3 tasks.");
+      return;
+    }
+    if (this.state.title.length < 4 || this.state.title.length > 40) {
+      Alert.alert("Title should be between 4 and 40 characters");
+      return;
+    }
     this.upsertList(form);
   };
 
@@ -44,7 +52,7 @@ class PostScreen extends Component {
           icon="arrow-left"
           onPress={() => this.props.navigation.navigate("Main")}
         />
-        <Card>
+        <Card style={{ flexDirection: "column", flex: 1 }}>
           <Card.Title
             title="Create List"
             subtitle={this.props.currentUser.name}
@@ -68,14 +76,14 @@ class PostScreen extends Component {
           <Card.Title
             title="Tasks"
             subtitle="20 tasks maximum"
-            style={{ marginTop: 20 }}
+            style={{ marginTop: 10 }}
           />
-          <Surface>
-            <ScrollView
-              style={{
-                height: "51%"
-              }}
-            >
+          <Surface
+            style={{
+              flex: 1
+            }}
+          >
+            <ScrollView>
               {this.state.tasks.map((task, idx) => {
                 return (
                   <TextInput
@@ -102,9 +110,9 @@ class PostScreen extends Component {
           style={{
             position: "absolute",
             marginRight: 36,
-            marginBottom: 80,
+            marginBottom: 0,
             right: 0,
-            bottom: 0,
+            bottom: "12%",
             backgroundColor: "green"
           }}
           onPress={() => {
@@ -122,9 +130,9 @@ class PostScreen extends Component {
           style={{
             position: "absolute",
             marginRight: 86,
-            marginBottom: 80,
+            marginBottom: 0,
             right: 0,
-            bottom: 0,
+            bottom: "12%",
             backgroundColor: "red"
           }}
           onPress={() => {

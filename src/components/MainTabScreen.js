@@ -49,9 +49,9 @@ class MainTabScreen extends Component {
           style={{
             position: "absolute",
             marginRight: 36,
-            marginBottom: 90,
+            marginBottom: 0,
             right: 0,
-            bottom: 0
+            bottom: "12%"
           }}
           small
           icon="plus"
