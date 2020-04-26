@@ -13,11 +13,19 @@ class SearchListsContainer extends Component {
   componentDidMount = () => {
     if (this.props.searchOnMount) {
       this.props.apiRequest().then(() => {
-        console.log(this.props.items);
         this.dynamicSearchForLists("");
       });
     }
   };
+
+  static getDerivedStateFromProps(props, state) {
+    return {
+      ...state,
+      filteredItems: props.items.filter(item =>
+        item.title.toLowerCase().includes(state.query.toLowerCase())
+      )
+    };
+  }
 
   filter = (query, unfilteredList) =>
     unfilteredList.filter(item =>

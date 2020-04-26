@@ -49,7 +49,7 @@ class MainTabScreen extends Component {
           style={{
             position: "absolute",
             marginRight: 36,
-            marginBottom: 120,
+            marginBottom: 90,
             right: 0,
             bottom: 0
           }}

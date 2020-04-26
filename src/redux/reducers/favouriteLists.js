@@ -1,7 +1,9 @@
 import {
   GET_FAVOURITE_LISTS_BEGIN,
   GET_FAVOURITE_LISTS_FAILURE,
-  GET_FAVOURITE_LISTS_SUCCESS
+  GET_FAVOURITE_LISTS_SUCCESS,
+  ADD_FAVOURITE_LIST_SUCCESS,
+  DELETE_FAVOURITE_LIST_SUCCESS
 } from "../actions/favouriteLists";
 
 const initialState = {
@@ -28,6 +30,19 @@ function favouriteListsReducer(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case ADD_FAVOURITE_LIST_SUCCESS:
+      return {
+        ...state,
+        items:
+          state.items.findIndex(x => x.list_id === action.payload) === -1
+            ? state.items.concat([action.payload])
+            : state.items
+      };
+    case DELETE_FAVOURITE_LIST_SUCCESS:
+      return {
+        ...state,
+        items: state.items.filter(x => x.list_id !== action.payload)
       };
     default:
       return state;

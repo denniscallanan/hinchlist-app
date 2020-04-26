@@ -6,6 +6,11 @@ import Header from "./Header";
 import { apiRequest } from "../api/client";
 import { List, Checkbox, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
+import {
+  addFavouriteListsSuccess,
+  deleteFavouriteListsSuccess
+} from "../redux/actions/favouriteLists";
+import { deleteMyLists } from "../redux/actions/myLists";
 
 class TaskScreen extends Component {
   state = {
@@ -16,8 +21,10 @@ class TaskScreen extends Component {
   };
 
   componentDidMount = () => {
+    console.log("Task component mounting");
     this.getTaskData();
     this.getFavouritesData();
+    this.getLikedData();
   };
 
   getTaskData = () => {
@@ -25,6 +32,7 @@ class TaskScreen extends Component {
       method: "GET"
     })
       .then(response => {
+        console.log(response);
         this.setState(
           {
             tasks: response.result.items.map(item => ({
@@ -34,11 +42,18 @@ class TaskScreen extends Component {
           },
           () => {
             this.loadCheckState().then(data => {
-              if (data && data.tasks) {
-                this.setState({
-                  tasks: data.tasks,
-                  allChecked: data.tasks.every(task => task.checked)
-                });
+              if (data && data.tasks && data.tasks.length > 0) {
+                console.log("Found local stored check state");
+                console.log(data);
+                this.setState(
+                  {
+                    tasks: data.tasks,
+                    allChecked: data.tasks.every(task => task.checked)
+                  },
+                  () => {
+                    console.log(this.state.tasks);
+                  }
+                );
               }
             });
           }
@@ -57,6 +72,22 @@ class TaskScreen extends Component {
       }
     ).then(response => {
       this.setState({ favourited: response.result.favourited });
+    });
+  };
+
+  getLikedData = () => {
+    apiRequest("/api/votes/lists/" + this.props.route.params.listItem.list_id, {
+      method: "GET"
+    }).then(response => {
+      this.setState({ liked: response.result.liked });
+    });
+    apiRequest(
+      "/api/votes/counts/" + this.props.route.params.listItem.list_id,
+      {
+        method: "GET"
+      }
+    ).then(response => {
+      this.setState({ count: response.result.count });
     });
   };
 
@@ -118,9 +149,48 @@ class TaskScreen extends Component {
     });
   };
 
-  likeButtonPressed = () => {};
+  stateButtonPressed = (apiPath, stateKey) => {
+    const urlPath =
+      "/api/" +
+      apiPath +
+      "/" +
+      (this.state[stateKey] ? "take" : "give") +
+      "/" +
+      this.props.route.params.listItem.list_id;
+    apiRequest(urlPath, {
+      method: "POST"
+    }).then(response => {
+      if (response.result && response.result.status) {
+        this.setState({ [stateKey]: !this.state[stateKey] }, () => {
+          if (stateKey === "favourited" && this.state[stateKey]) {
+            this.props.addFavouriteListsSuccess(
+              this.props.route.params.listItem
+            );
+          } else {
+            this.props.deleteFavouriteListsSuccess(
+              this.props.route.params.listItem.list_id
+            );
+          }
+        });
+      }
+    });
+  };
 
-  starButtonPressed = () => {};
+  likeButtonPressed = () => {
+    this.stateButtonPressed("votes", "liked");
+  };
+
+  starButtonPressed = () => {
+    this.stateButtonPressed("favourites", "favourited");
+  };
+
+  deleteButtonPressed = () => {
+    this.props.deleteMyLists(this.props.route.params.listItem.list_id);
+    this.props.deleteFavouriteListsSuccess(
+      this.props.route.params.listItem.list_id
+    );
+    this.props.navigation.navigate("Main");
+  };
 
   render() {
     return (
@@ -131,8 +201,15 @@ class TaskScreen extends Component {
             this.storeCheckState();
             this.props.navigation.navigate("Main");
           }}
+          likeCount={this.state.count}
           likeButtonPressed={this.likeButtonPressed}
           starButtonPressed={this.starButtonPressed}
+          deleteButtonPressed={
+            this.props.currentUser.user_id ===
+            this.props.route.params.listItem.author_id
+              ? this.deleteButtonPressed
+              : null
+          }
           liked={this.state.liked}
           starred={this.state.favourited}
         />
@@ -153,12 +230,23 @@ class TaskScreen extends Component {
 }
 
 TaskScreen.propTypes = {
+  currentUser: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  addFavouriteListsSuccess: PropTypes.func.isRequired,
+  deleteFavouriteListsSuccess: PropTypes.func.isRequired,
+  deleteMyLists: PropTypes.func.isRequired
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser
+});
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  deleteMyLists: listId => dispatch(deleteMyLists(listId)),
+  addFavouriteListsSuccess: list => dispatch(addFavouriteListsSuccess(list)),
+  deleteFavouriteListsSuccess: listId =>
+    dispatch(deleteFavouriteListsSuccess(listId))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskScreen);

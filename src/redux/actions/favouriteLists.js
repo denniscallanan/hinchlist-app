@@ -4,6 +4,19 @@ export const GET_FAVOURITE_LISTS_BEGIN = "GET_FAVOURITE_LISTS_BEGIN";
 export const GET_FAVOURITE_LISTS_FAILURE = "GET_FAVOURITE_LISTS_FAILURE";
 export const GET_FAVOURITE_LISTS_SUCCESS = "GET_FAVOURITE_LISTS_SUCCESS";
 
+export const ADD_FAVOURITE_LIST_SUCCESS = "ADD_FAVOURITE_LIST_SUCCESS";
+export const DELETE_FAVOURITE_LIST_SUCCESS = "DELETE_FAVOURITE_LIST_SUCCESS";
+
+export const addFavouriteListsSuccess = listItem => ({
+  type: ADD_FAVOURITE_LIST_SUCCESS,
+  payload: listItem
+});
+
+export const deleteFavouriteListsSuccess = listId => ({
+  type: DELETE_FAVOURITE_LIST_SUCCESS,
+  payload: listId
+});
+
 export const getFavouriteListsBegin = () => ({
   type: GET_FAVOURITE_LISTS_BEGIN
 });
